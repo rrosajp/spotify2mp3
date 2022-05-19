@@ -69,12 +69,10 @@ def get_new_token():
     return json.loads(r_text)['accessToken']
 
 def get_tracks(playlist_id, offset, limit, token):
-    url = "https://api.spotify.com/v1/playlists/" + str(playlist_id) + "/tracks?offset=" + str(offset) + "&limit=" + str(limit) + "&market=GB"
+    url = f"https://api.spotify.com/v1/playlists/{str(playlist_id)}/tracks?offset={str(offset)}&limit={str(limit)}&market=GB"
+
     payload={}
-    headers = {
-      'authorization': 'Bearer ' + str(token),
-      'Sec-Fetch-Dest': 'empty',
-    }
+    headers = {'authorization': f'Bearer {str(token)}', 'Sec-Fetch-Dest': 'empty'}
     response = requests.request("GET", url, headers=headers, data=payload)
     return json.loads(response.text)
 
@@ -85,7 +83,7 @@ def get_song_names(playlist_id):
     while not done:
         new_token = get_new_token()
         data = get_tracks(playlist_id, offset_counter, 100, new_token)
-        if(not 'total' in data):
+        if 'total' not in data:
             print(data)
             exit()
         if(data['total'] > 0):
